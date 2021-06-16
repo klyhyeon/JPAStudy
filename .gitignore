@@ -37,3 +37,6 @@ out/
 ### VS Code ###
 .vscode/
 .DS_Store
+
+# Ignore Gradle build output directory
+build
