@@ -2,3 +2,16 @@ spring:
   h2:
     console:
       enabled: true
+
+  jpa:
+    open-in-view: false
+
+    show-sql: true
+
+    hibernate:
+      ddl-auto: validate
+
+    properties:
+      hiberante:
+        format_sql: true
+
