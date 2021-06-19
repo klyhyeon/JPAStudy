@@ -6,22 +6,26 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
+import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @SpringBootTest
-class MemberRepositoryTest {
+class SimpleRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
     @Test
     @DisplayName("MEMBER_1번을_조회한다")
     void findById() {
-        Member member = memberRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("Member not found"));
+        Member member = memberRepository.findById(1L)
+                                        .orElseThrow(NoSuchElementException::new);
 
         assertThat(member.getName()).isEqualTo("siro");
         assertThat(member.getAge()).isEqualTo(29);
@@ -123,9 +127,63 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("MEMBER_전체_회원수를_조회한다")
+    @DisplayName("MEMBER_전체수를_조회한다")
     void count() {
         long count = memberRepository.count();
         assertThat(count).isEqualTo(5);
+    }
+
+    /**
+     * JPA Page는 0부터 시작한다 <br/>
+     * <br/>
+     * Creates a new unsorted {@link PageRequest}. <br/>
+     * page zero-based page index, must not be negative. <br/>
+     * the size of the page to be returned, must be greater than 0. <br/>
+     */
+    @Test
+    @DisplayName("PAGE_API_학습테스트한다")
+    void page() {
+        Page<Member> members = memberRepository.findAll(PageRequest.of(1, 3));
+        Pageable pageable = members.getPageable();
+
+        Sort sort = members.getSort();
+        int pageNumber = pageable.getPageNumber();
+        int totalPages = members.getTotalPages();
+        long totalElements = members.getTotalElements();
+        int numberOfElements = members.getNumberOfElements();
+        int size = members.getSize();
+
+        assertThat(sort.isUnsorted()).isTrue();
+        assertThat(pageNumber).isEqualTo(1);
+        assertThat(totalPages).isEqualTo(2);
+        assertThat(totalElements).isEqualTo(5);
+        assertThat(numberOfElements).isEqualTo(2);
+        assertThat(size).isEqualTo(3);
+        assertThat(members).extracting("name", "age")
+                           .contains(tuple("james", 41),
+                                     tuple("michael", 33))
+                           .size().isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("EXAMPLE_API_사용하여_조건검색을_학습테스트한다")
+    void exampleFindAll() {
+        ExampleMatcher matcher = matching()
+                .withIgnorePaths("age") // age 는 무시하고 검색한다
+                .withMatcher("name", GenericPropertyMatchers.contains()); // name 을 검색조건에 포함시킨다 - like 검색
+
+        // 조건 검색을 위한 Member proxy 를 생성한다
+        // name 에 i가 들어가는 멤버를 조회한다
+        // age 는 무시되므로 값이 몇이든 의미없다
+        Example<Member> example = Example.of(Member.createMember("i", 0), matcher);
+
+        List<Member> members = memberRepository.findAll(example);
+
+        assertThat(members).extracting("name", "age")
+                           .contains(tuple("siro", 29),
+                                     tuple("sophia", 32),
+                                     tuple("dennis", 25),
+                                     tuple("michael", 33))
+                           .size().isEqualTo(4);
     }
 }
