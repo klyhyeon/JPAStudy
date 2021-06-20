@@ -2,3 +2,16 @@ spring:
   h2:
     console:
       enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    url: jdbc:h2:tcp//localhost/~/test
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      use-new-id-generator-mappings: true # JPA 표준에 맞춘 새로운 키 생성 전략을 사용합니다.
+
+
+
