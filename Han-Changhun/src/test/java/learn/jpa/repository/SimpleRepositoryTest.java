@@ -5,7 +5,7 @@ import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.*;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
-@SpringBootTest
+@DataJpaTest
 class SimpleRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
@@ -187,14 +187,14 @@ class SimpleRepositoryTest {
                            .size().isEqualTo(4);
     }
 
-
     /**
      * 참고자료 경로
+     *
      * @see "Han-Changhun/src/test/resources/query-method-1.png"
      */
     @Test
-    @DisplayName("Query_Methods_실습")
-    void queryMethods() {
+    @DisplayName("Query_Methods_실습_읽기_접두사")
+    void queryMethodsV1() {
         Member member = Member.createMember("tester", 77);
         Member tester = memberRepository.saveAndFlush(member);
 
@@ -204,5 +204,68 @@ class SimpleRepositoryTest {
         assertThat(tester).usingRecursiveComparison().isEqualTo(memberRepository.queryByName("tester"));
         assertThat(tester).usingRecursiveComparison().isEqualTo(memberRepository.searchByName("tester"));
         assertThat(tester).usingRecursiveComparison().isEqualTo(memberRepository.streamByName("tester"));
+    }
+
+    /**
+     * 참고자료 경로
+     *
+     * @see "Han-Changhun/src/test/resources/query-method-1.png"
+     */
+    @Test
+    @DisplayName("Query_Methods_TOP_조회")
+    void queryMethodsV2() {
+        // id=1 siro 와 id=6 siro 가 존재하는 상황에서
+        // limit query 를 사용하여 id 우선순위가 더 높은 데이터를 조회한다
+        Member member = Member.createMember("siro", 77);
+        memberRepository.saveAndFlush(member); // id=6 siro save
+
+        Member siro = memberRepository.findById(1L).get(); // id=1 siro select
+
+        assertThat(siro).usingRecursiveComparison().isEqualTo(memberRepository.findTop1ByName("siro"));
+        assertThat(siro).usingRecursiveComparison().isEqualTo(memberRepository.findFirst1ByName("siro"));
+
+        List<Member> members = memberRepository.findTop2ByName("siro"); //  limit = 2 select
+
+        assertThat(members).extracting("name", "age")
+                           .contains(tuple("siro", 29),
+                                     tuple("siro", 77))
+                           .size().isEqualTo(2);
+    }
+
+    /**
+     * 참고자료 경로
+     *
+     * @see "Han-Changhun/src/test/resources/query-method-1.png"
+     */
+    @Test
+    @DisplayName("Query_Methods_AND_조회")
+    void queryMethodsV3() {
+        Member member = Member.createMember("siro", 77);
+        memberRepository.saveAndFlush(member); // id=6 siro save
+
+        Member siro = memberRepository.findByNameAndAge("siro", 77);
+
+        assertThat(siro).extracting("name", "age")
+                        .containsExactly("siro", 77);
+    }
+
+    /**
+     * 참고자료 경로
+     *
+     * @see "Han-Changhun/src/test/resources/query-method-1.png"
+     */
+    @Test
+    @DisplayName("Query_Methods_OR_조회")
+    void queryMethodsV4() {
+        Member member = Member.createMember("siro", 25);
+        memberRepository.saveAndFlush(member); // id=6 siro save
+
+        List<Member> members = memberRepository.findByNameOrAge("siro", 25);
+
+        assertThat(members).extracting("name", "age")
+                           .contains(tuple("siro", 29),
+                                     tuple("dennis", 25),
+                                     tuple("siro", 25))
+                           .size().isEqualTo(3);
     }
 }
