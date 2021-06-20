@@ -22,7 +22,7 @@ class SimpleRepositoryTest {
     MemberRepository memberRepository;
 
     @Test
-    @DisplayName("MEMBER_1번을_조회한다")
+    @DisplayName("Member_1번을_조회한다")
     void findById() {
         Member member = memberRepository.findById(1L)
                                         .orElseThrow(NoSuchElementException::new);
@@ -32,7 +32,7 @@ class SimpleRepositoryTest {
     }
 
     @Test
-    @DisplayName("MEMBER_1번_3번을_조회한다")
+    @DisplayName("Member_1번_3번을_조회한다")
     void findAllById() {
         List<Member> members = memberRepository.findAllById(Lists.newArrayList(1L, 3L));
 
@@ -43,7 +43,7 @@ class SimpleRepositoryTest {
     }
 
     @Test
-    @DisplayName("MEMBER_초기_데이터는_5명이다")
+    @DisplayName("Member_초기_데이터는_5명이다")
     void findAll() {
         List<Member> members = memberRepository.findAll();
 
@@ -57,7 +57,7 @@ class SimpleRepositoryTest {
     }
 
     @Test
-    @DisplayName("MEMBER_1번을_제거한다")
+    @DisplayName("Member_1번을_제거한다")
     void deleteById() {
         memberRepository.deleteById(1L);
 
@@ -72,7 +72,7 @@ class SimpleRepositoryTest {
     }
 
     @Test
-    @DisplayName("MEMBER_1번_3번을_제거한다")
+    @DisplayName("Member_1번_3번을_제거한다")
     void deleteAllById() {
         memberRepository.deleteAllById(Lists.newArrayList(1L, 3L));
 
@@ -86,7 +86,7 @@ class SimpleRepositoryTest {
     }
 
     @Test
-    @DisplayName("MEMBER_전체제거한다")
+    @DisplayName("Member_전체제거한다")
     void deleteAll() {
         memberRepository.deleteAll();
 
@@ -96,7 +96,7 @@ class SimpleRepositoryTest {
     }
 
     @Test
-    @DisplayName("MEMBER_배치_1번_3번을_제거한다")
+    @DisplayName("Member_배치_1번_3번을_제거한다")
     void deleteAllByIdInBatch() {
         memberRepository.deleteAllByIdInBatch(Lists.newArrayList(1L, 3L));
 
@@ -110,7 +110,7 @@ class SimpleRepositoryTest {
     }
 
     @Test
-    @DisplayName("MEMBER_배치_전체제거한다")
+    @DisplayName("Member_배치_전체제거한다")
     void deleteAllInBatch() {
         memberRepository.deleteAllInBatch();
 
@@ -120,14 +120,14 @@ class SimpleRepositoryTest {
     }
 
     @Test
-    @DisplayName("MEMBER_1번이_존재하는지_확인한다")
+    @DisplayName("Member_1번이_존재하는지_확인한다")
     void existsById() {
         boolean exists = memberRepository.existsById(1L);
         assertThat(exists).isTrue();
     }
 
     @Test
-    @DisplayName("MEMBER_전체수를_조회한다")
+    @DisplayName("Member_전체수를_조회한다")
     void count() {
         long count = memberRepository.count();
         assertThat(count).isEqualTo(5);
@@ -141,7 +141,7 @@ class SimpleRepositoryTest {
      * the size of the page to be returned, must be greater than 0. <br/>
      */
     @Test
-    @DisplayName("PAGE_API_학습테스트한다")
+    @DisplayName("Page_API_학습테스트한다")
     void page() {
         Page<Member> members = memberRepository.findAll(PageRequest.of(1, 3));
         Pageable pageable = members.getPageable();
@@ -166,7 +166,7 @@ class SimpleRepositoryTest {
     }
 
     @Test
-    @DisplayName("EXAMPLE_API_사용하여_조건검색을_학습테스트한다")
+    @DisplayName("Example_API_사용하여_조건검색을_학습테스트한다")
     void exampleFindAll() {
         ExampleMatcher matcher = matching()
                 .withIgnorePaths("age") // age 는 무시하고 검색한다
@@ -185,5 +185,24 @@ class SimpleRepositoryTest {
                                      tuple("dennis", 25),
                                      tuple("michael", 33))
                            .size().isEqualTo(4);
+    }
+
+
+    /**
+     * 참고자료 경로
+     * @see "Han-Changhun/src/test/resources/query-method-1.png"
+     */
+    @Test
+    @DisplayName("Query_Methods_실습")
+    void queryMethods() {
+        Member member = Member.createMember("tester", 77);
+        Member tester = memberRepository.saveAndFlush(member);
+
+        assertThat(tester).usingRecursiveComparison().isEqualTo(memberRepository.findByName("tester"));
+        assertThat(tester).usingRecursiveComparison().isEqualTo(memberRepository.getByName("tester"));
+        assertThat(tester).usingRecursiveComparison().isEqualTo(memberRepository.readByName("tester"));
+        assertThat(tester).usingRecursiveComparison().isEqualTo(memberRepository.queryByName("tester"));
+        assertThat(tester).usingRecursiveComparison().isEqualTo(memberRepository.searchByName("tester"));
+        assertThat(tester).usingRecursiveComparison().isEqualTo(memberRepository.streamByName("tester"));
     }
 }
