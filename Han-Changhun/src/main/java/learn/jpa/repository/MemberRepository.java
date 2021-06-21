@@ -1,6 +1,9 @@
 package learn.jpa.repository;
 
 import learn.jpa.model.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -53,4 +56,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByNameEndingWith(String name);
 
     List<Member> findByNameContaining(String name);
+
+    List<Member> findFirst2ByNameOrderByIdDesc(String name);
+
+    Page<Member> findByName(String name, Pageable pageable);
 }
