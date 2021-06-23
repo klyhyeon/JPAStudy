@@ -260,7 +260,7 @@ em.detach(member);
 em.remove(member);
 ```
 
-이 메서드가 호출되면 해당 `Entity`객체는 `EntityManager`를 통해 `영속성 컨텍스트(PersistenceContext)`에서 삭제가 **_예약_**되며,
+이 메서드가 호출되면 해당 `Entity`객체는 `EntityManager`를 통해 `영속성 컨텍스트(PersistenceContext)`에서 삭제가 **_예약_** 되며,
 
 이후 `flush`가 호출되면 `영속성 컨텍스트(PersistenceContext)`에서 삭제됨과 동시에 데이터베이스를 향해 `delete쿼리`가 발생한다.
 
@@ -789,7 +789,7 @@ public void persistenceContextTest() throws Exception {
 }
 ```
 
-member 객체는 `비영속 상태`이지만 **_식별자 값을 갖고 있기 때문_**에
+member 객체는 `비영속 상태`이지만 **_식별자 값을 갖고 있기 때문_** 에
 
 `em.merge(member)가` 먹히며 `영속성 컨텍스트(Persistence Context)`는 member 객체가 `merge` 되는 시점에
 
