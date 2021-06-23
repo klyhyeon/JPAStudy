@@ -1,19 +1,17 @@
 spring:
+  profiles:
+    active: init-false
+
   h2:
     console:
       enabled: true
 
   jpa:
     open-in-view: false
-
-    hibernate:
-      ddl-auto: validate
-
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-
 
 logging:
   level:
@@ -23,3 +21,31 @@ logging:
         orm:
           jpa: debug
           transaction: debug
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: init-true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+---
+
+spring:
+  sql:
+    init:
+      mode: never
+
+  config:
+    activate:
+      on-profile: init-false
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+

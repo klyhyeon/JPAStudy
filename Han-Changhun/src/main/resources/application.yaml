@@ -3,6 +3,10 @@ spring:
     console:
       enabled: true
 
+  sql:
+    init:
+      mode: never
+
   jpa:
     open-in-view: false
 

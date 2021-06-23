@@ -2,31 +2,32 @@ package learn.jpa.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.io.Serializable;
+import javax.persistence.*;
 
 @Entity
-@Getter
-@ToString
-@NoArgsConstructor
+@ToString @Getter
 @RequiredArgsConstructor
-public class Member implements Serializable {
-    private static final long serialVersionUID = 3990803224604257521L;
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member extends BaseEntity {
     @NonNull
     private String name;
 
     @NonNull
     private int age;
 
+    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Team team;
+
     @Builder(toBuilder = true)
     public static Member createMember(String name, int age) {
         return new Member(name, age);
+    }
+
+    public void toJoinTeam(Team team) {
+        if(team == null) {
+            throw new IllegalArgumentException("Team is null!");
+        }
+        this.team = team;
     }
 }
