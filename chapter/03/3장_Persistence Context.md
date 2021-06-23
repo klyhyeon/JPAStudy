@@ -875,6 +875,6 @@ public void persistenceContextTest() throws Exception {
 
 JPA를 사용할 때 가장 중요하게 생각해야 할 점은 `영속성 컨텍스트(Persistence Context)`에 대한 이해이다.
 
-`영속성 컨텍스트(Persistence Context)`는 애플리케이션과 데이터베이스의 사이에 존재하는 **_가상의 데이터베이스_**이다.
+`영속성 컨텍스트(Persistence Context)`는 애플리케이션과 데이터베이스의 사이에 존재하는 **_가상의 데이터베이스_** 이다.
 
 이 점을 명심해야 할 것이다.
