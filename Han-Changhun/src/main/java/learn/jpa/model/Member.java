@@ -1,6 +1,7 @@
 package learn.jpa.model;
 
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 

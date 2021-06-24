@@ -56,7 +56,7 @@ subprojects {
     }
 }
 
-['Kang-Minhyung', 'Lee-Yuhyun', 'Lee-Seungjae', 'Na-Taegeun', 'Kim-Samyina', 'Han-Changhun'].each {
+['Kang-Minhyung', 'Lee-Yuhyun', 'Lee-Seungjae', 'Kim-Samyina', 'Han-Changhun'].each {
     project(it) {
         bootJar.enabled(false)
         jar.enabled(true)
