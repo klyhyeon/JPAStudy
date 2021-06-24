@@ -12,16 +12,11 @@ import java.io.Serializable;
 @Table
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@TableGenerator(
-        name = "MEMBER_SEQ_GENERATOR",
-        table = "MEMBER_SEQ_TABLE",
-        pkColumnValue = "MEMBER_SEQ", allocationSize = 3
-)
 public class Member implements Serializable {
     private static final long serialVersionUID = 3990803224604257521L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "MEMBER_SEQ_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private int age;
