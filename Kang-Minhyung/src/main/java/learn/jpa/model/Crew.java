@@ -3,6 +3,7 @@ package learn.jpa.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "crewCrew")
 public class Crew {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
