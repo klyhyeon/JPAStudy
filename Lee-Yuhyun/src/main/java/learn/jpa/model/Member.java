@@ -26,4 +26,8 @@ public class Member implements Serializable {
     private String city;
     private String street;
     private String zipcode;
+
+    @ManyToOne
+    @JoinColumn(name="TEAM_ID")
+    private Team team;
 }
