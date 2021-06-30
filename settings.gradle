@@ -1,2 +1,2 @@
 rootProject.name = 'JPAStudy'
-include('Kang-Minhyung', 'Lee-Yuhyun', 'Lee-Seungjae', 'Kim-Samyina', 'Han-Changhun')
+include('Kang-Minhyung', 'Lee-Yuhyun', 'Lee-Seungjae', 'Han-Changhun')
