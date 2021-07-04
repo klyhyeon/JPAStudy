@@ -7,20 +7,20 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
 @Builder
-public class Item {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Locker {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ITEM_ID")
+    @Id @GeneratedValue
+    @Column(name = "LOCKER_ID")
     private Long id;
 
     private String name;
-    private int price;
-    private int stockQuantity;
 
-
+    //양방향
+    @OneToOne(mappedBy = "locker") //주인이 아님을 설정
+    private Member member;
 }

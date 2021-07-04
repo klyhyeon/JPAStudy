@@ -1,4 +1,4 @@
-package learn.jpa.model;
+package exercise.jpa;
 
 public enum Orderstatus {
     ORDER, CANCEL
