@@ -7,15 +7,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Data
+@Entity
+@IdClass(MemberProductId.class)
+public class MemberProduct {
 
     @Id
     @ManyToOne
@@ -28,4 +26,5 @@ public class Order {
     private Product product; //MemberProductId.product와 연결
 
     private int orderAmount;
+
 }

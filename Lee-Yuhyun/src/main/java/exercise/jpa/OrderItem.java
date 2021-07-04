@@ -1,4 +1,4 @@
-package learn.jpa.model;
+package exercise.jpa;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
+//@Entity
 @Table(name = "ORDER_ITEM")
 public class OrderItem {
 
