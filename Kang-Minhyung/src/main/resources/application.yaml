@@ -1,12 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:h2:~/test;AUTO_SERVER=TRUE
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
-  h2:
-    console:
-      enabled: true
   jpa:
     properties:
       hibernate:
@@ -18,8 +10,4 @@ spring:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: create
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.hivernate.type: trace
+    generate-ddl: true
