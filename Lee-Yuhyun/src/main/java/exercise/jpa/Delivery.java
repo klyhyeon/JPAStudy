@@ -7,25 +7,25 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Entity
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Entity
-@Table(name = "ORDER_ITEM")
-public class OrderItem {
+public class Delivery {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "ITEM_ID")
-    private Item item;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "ORDER_ID")
+    @OneToOne(mappedBy = "delivery")
     private Order order;
 
-    private int orderPrice; //주문가격
-    private int count; //주문수량
+    private String city;
+
+    private String street;
+
+    private String zipcode;
+
+    @Enumerated(EnumType.STRING)
+    private Deliverystatus status;
 }

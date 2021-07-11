@@ -10,27 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-
 @Data
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "DTYPE")
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public abstract class Item {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Category {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
-    private int price;
-
-    private int stockQuantity;
-
-    @OneToMany(mappedBy = "item")
-    private List<OrderItem> orderItems = new ArrayList<>();
-
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "category")
     private List<CategoryItem> categoryItems = new ArrayList<>();
 }
