@@ -59,4 +59,32 @@ class MemberTest {
         tx.commit();
     }
 
+
+    @Test
+    @DisplayName("프록시 테스트")
+    void proxyTest(){
+        tx.begin();
+        Team team = Team.builder()
+                        .name("team1")
+                        .build();
+
+
+        Member member = Member.builder()
+                .name("홍길동")
+                .age(27)
+                .team(team)
+                .build();
+
+        em.persist(team);
+        em.persist(member);
+
+        Member resultMember = em.find(Member.class, member.getId());
+        Team resultTeam = resultMember.getTeam();
+        em.flush();
+
+        assertThat(resultMember.getName()).isEqualTo("홍길동");
+        assertThat(resultMember.getAge()).isEqualTo(27);
+        assertThat(resultTeam.getName()).isEqualTo("team1");
+        tx.commit();
+    }
 }
