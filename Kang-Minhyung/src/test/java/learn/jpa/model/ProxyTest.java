@@ -123,4 +123,17 @@ public class ProxyTest {
         List<Team> teams = em.createQuery("select t from Team t ", Team.class).getResultList();
         System.out.println(teams);
     }
+
+    @Test
+    public void proxyTest12() {
+        Team team = em.getReference(Team.class, 1L);
+        team.getId();
+    }
+
+    @Test
+    public void proxyTest13() {
+        Member member = em.find(Member.class, 1L);
+        Team team = em.getReference(Team.class, 1L);
+        member.setTeam(team);
+    }
 }
