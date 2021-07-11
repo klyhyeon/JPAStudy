@@ -58,13 +58,13 @@ public class InitData {
 //            em.persist(memberSequence2);
 //            em.persist(memberSequence3);
 
-            MemberTable memberTable1 = new MemberTable();
-            MemberTable memberTable2 = new MemberTable();
-            MemberTable memberTable3 = new MemberTable();
-
-            em.persist(memberTable1);
-            em.persist(memberTable2);
-            em.persist(memberTable3);
+//            MemberTable memberTable1 = new MemberTable();
+//            MemberTable memberTable2 = new MemberTable();
+//            MemberTable memberTable3 = new MemberTable();
+//
+//            em.persist(memberTable1);
+//            em.persist(memberTable2);
+//            em.persist(memberTable3);
         }
     }
 }
