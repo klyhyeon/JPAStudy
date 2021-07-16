@@ -27,9 +27,19 @@ class MemberTest {
     void connectJPA(){
         em = emf.createEntityManager();
         tx = em.getTransaction();
+        tx.begin();
+//
+//        Member member = Member.builder()
+//                .name("홍길동")
+//                .age(27)
+//                .build();
+//
+//        em.persist(member);
+//        em.flush();
     }
     @AfterEach
     void closeAll(){ //JPA 반드시 종료 무조건 시켜주자
+        tx.commit();
         em.close();
         emf.close();
     }
@@ -63,28 +73,42 @@ class MemberTest {
     @Test
     @DisplayName("프록시 테스트")
     void proxyTest(){
-        tx.begin();
-        Team team = Team.builder()
-                        .name("team1")
-                        .build();
-
-
-        Member member = Member.builder()
-                .name("홍길동")
-                .age(27)
-                .team(team)
-                .build();
-
-        em.persist(team);
-        em.persist(member);
-
-        Member resultMember = em.find(Member.class, member.getId());
-        Team resultTeam = resultMember.getTeam();
+        em.flush();
+        Member resultMember = em.find(Member.class, 1L);
         em.flush();
 
         assertThat(resultMember.getName()).isEqualTo("홍길동");
         assertThat(resultMember.getAge()).isEqualTo(27);
-        assertThat(resultTeam.getName()).isEqualTo("team1");
-        tx.commit();
+    }
+
+    @Test
+    @DisplayName("9장 테스트")
+    void embeddedTest(){
+        Address address = Address.builder()
+                                 .city("city")
+                                 .street("street")
+                                 .zipcode("zipcode")
+                                 .build();
+
+        Address comAddress = Address.builder()
+                                    .city("cocity")
+                                    .street("costreet")
+                                    .zipcode("cozipcode")
+                                    .build();
+
+        Period period = Period.of("20210714", "20210714");
+
+        Member member = Member.builder()
+                .name("name")
+                .age(26)
+                .period(period)
+                .homeAddress(address)
+                .companyAddress(comAddress)
+                .build();
+
+        em.persist(member);
+        em.flush();
+
+        System.out.println(member.toString());
     }
 }
