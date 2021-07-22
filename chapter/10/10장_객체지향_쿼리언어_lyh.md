@@ -35,4 +35,13 @@ JPA를 우회하는 매퍼에 대해 JPA는 인식하지 못하기 때문에 영
 이런 이슈를 해결하기 위해선 SQL 실행 직전에 스프링 AOP를 통해 강제 플러시해서
 영속성 컨텍스트와 DB를 동기화하는 것입니다.
 
+## JPQL
+
+대소문자 구분
+- 엔티티와 속성 (Member, username)
+
+엔티티 이름
+  
+별칭은 필수
+- `SELECT username FROM Member m` //username -> m.username 
 
