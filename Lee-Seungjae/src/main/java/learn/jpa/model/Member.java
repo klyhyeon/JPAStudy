@@ -31,6 +31,10 @@ public class Member implements Serializable {
     })
     private Address companyAddress;
 
+    public Member(String name) {
+        this.name = name;
+    }
+
     @Builder
     public Member(Long id, String name, int age, Period period, Address homeAddress, Address companyAddress) {
         this.id = id;
