@@ -1,5 +1,3 @@
-PULL_REQUEST_TEMPLATE.md
-
 # ***✅ Pull Request***
 
 <!--
