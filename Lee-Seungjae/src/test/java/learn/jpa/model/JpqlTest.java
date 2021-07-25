@@ -132,4 +132,17 @@ public class JpqlTest {
         query.setMaxResults(20);
         query.getResultList();
     }
+
+    @Test
+    @DisplayName("컬렉션 테스트")
+    void collectionTest() {
+        String jpql = "select m from Member m where m.homeAddress is not Empty";
+        List<Member> members = em.createQuery(jpql, Member.class).getResultList();
+    }
+
+    @Test
+    void namedQueryTest() {
+        List<Member> members = em.createNamedQuery("Member.findByName", Member.class)
+                .setParameter("name", "kim").getResultList();
+    }
 }
