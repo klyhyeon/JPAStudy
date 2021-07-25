@@ -1,6 +1,5 @@
 package exercise.jpa;
 
-import learn.jpa.model.ch09.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -32,4 +31,8 @@ public class Member extends BaseEntity {
 //    private String street;
 //
 //    private String zipcode;
+
+    public List<Order> getOrders() {
+        return orders;
+    }
 }

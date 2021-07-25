@@ -6,33 +6,34 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-@Entity(name = "orders")
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order {
+public class Orders implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    private Address address;
+
     @Builder
-    public Order(Long id, Product product, Member member) {
+    public Orders(Long id, Product product, Member member, Address address) {
         this.id = id;
         this.product = product;
         this.member = member;
+        this.address = address;
     }
 
     @Override
     public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", product=" + product +
-                '}';
+        return "Order{" + "id=" + id + ", productId=" + product.getId() + ", memberId=" + member.getId() + ", address=" + address + '}';
     }
 }

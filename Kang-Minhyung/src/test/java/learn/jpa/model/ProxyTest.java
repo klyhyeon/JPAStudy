@@ -30,14 +30,12 @@ public class ProxyTest {
         Member member = Member.builder()
                 .name("kang")
                 .age(30)
-                .address("경기도")
                 .orders(new ArrayList<>())
                 .build();
 
         Member member2 = Member.builder()
                 .name("kang")
                 .age(30)
-                .address("경기도")
                 .orders(new ArrayList<>())
                 .build();
 
