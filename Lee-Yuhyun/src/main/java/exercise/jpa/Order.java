@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Order")
-@Data
 @Builder
 @Entity
 @NoArgsConstructor
