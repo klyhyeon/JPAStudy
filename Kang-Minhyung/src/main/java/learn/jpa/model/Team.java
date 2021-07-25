@@ -18,7 +18,7 @@ public class Team implements Serializable {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<Member> members;
 
     @Builder
