@@ -6,10 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -91,16 +88,48 @@ public class JpqlTest {
     }
 
     @Test
-    @DisplayName("컬렉션 테스트")
-    void collectionTest() {
-        String jpql = "select m from Member m where m.homeAddress is not Empty";
-        List<Member> members = em.createQuery(jpql, Member.class).getResultList();
+    @DisplayName("TypeQuery 테스트")
+    void typeQueryTest() {
+        TypedQuery<Member> query = em.createQuery("SELECT m FROM Member m", Member.class);
+
+        List<Member> resultList = query.getResultList();
+
+        assertThat(resultList.get(0).getName()).isEqualTo(member.getName());
     }
 
     @Test
-    void namedQueryTest() {
-        List<Member> members = em.createNamedQuery("Member.findByName", Member.class)
-                .setParameter("name", "kim").getResultList();
+    @DisplayName("이름기준 파라미터")
+    void nameOfParameterTest() {
+        String name = "kim";
+
+        TypedQuery<Member> query = em.createQuery("SELECT m FROM Member m where m.name = :name", Member.class);
+
+        query.setParameter("name", name);
+        List<Member> resultList = query.getResultList();
+
+        System.out.println(resultList.get(0).getName());
+
+        assertThat(resultList.get(0).getName()).isEqualTo(member.getName());
     }
 
+    @Test
+    @DisplayName("여러값 조회")
+    void specificColumnTest() {
+        List<Object[]> resultList = em.createQuery("SELECT m.homeAddress, m.companyAddress FROM Member m").getResultList();
+
+        for(Object[] obj : resultList) {
+            Address homeAddress = (Address) obj[0];
+            Address companyAddress = (Address) obj[1];
+        }
+    }
+
+    @Test
+    @DisplayName("페이징 API")
+    void pagingApiTest() {
+        TypedQuery<Member> query = em.createQuery("SELECT m FROM Member m order by m.name desc", Member.class);
+
+        query.setFirstResult(10);
+        query.setMaxResults(20);
+        query.getResultList();
+    }
 }
