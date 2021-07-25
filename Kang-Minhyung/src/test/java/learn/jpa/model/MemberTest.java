@@ -33,7 +33,6 @@ class MemberTest {
                 .id(10L)
                 .name("홍길동")
                 .age(30)
-                .address("서울시")
                 .build();
 
         Member save = repository.save(member);
@@ -47,7 +46,6 @@ class MemberTest {
                 .id(10L)
                 .name("홍길동")
                 .age(30)
-                .address("서울시")
                 .build();
 
         Member save = repository.save(member);
@@ -61,7 +59,6 @@ class MemberTest {
                 .id(10L)
                 .name("홍길동")
                 .age(30)
-                .address("서울시")
                 .build();
 
         Member save = repository.save(member);
@@ -75,7 +72,6 @@ class MemberTest {
                 .id(10L)
                 .name("홍길동")
                 .age(30)
-                .address("서울시")
                 .build();
 
         Member save = repository.save(member);
@@ -84,7 +80,6 @@ class MemberTest {
                 .id(10L)
                 .name("홍길동")
                 .age(30)
-                .address("서울시")
                 .build();
 
         Member save2 = repository.save(member2);
