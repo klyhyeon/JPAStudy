@@ -31,7 +31,28 @@ public class JpqlTest {
         em = emf.createEntityManager();
         tx = em.getTransaction();
         tx.begin();
-        member = new Member("kim");
+        Address address = Address.builder()
+                .city("city")
+                .street("street")
+                .zipcode("zipcode")
+                .build();
+
+        Address comAddress = Address.builder()
+                .city("cocity")
+                .street("costreet")
+                .zipcode("cozipcode")
+                .build();
+
+        Period period = Period.of("20210714", "20210714");
+
+        Member member = Member.builder()
+                .name("kim")
+                .age(26)
+                .period(period)
+                .homeAddress(address)
+                .companyAddress(comAddress)
+                .build();
+
         em.persist(member);
         em.flush();
     }
@@ -67,6 +88,19 @@ public class JpqlTest {
         List<Member> resultList = em.createQuery(cq).getResultList();
 
         assertThat(resultList.get(0).getName()).isEqualTo("kim");
+    }
+
+    @Test
+    @DisplayName("컬렉션 테스트")
+    void collectionTest() {
+        String jpql = "select m from Member m where m.homeAddress is not Empty";
+        List<Member> members = em.createQuery(jpql, Member.class).getResultList();
+    }
+
+    @Test
+    void namedQueryTest() {
+        List<Member> members = em.createNamedQuery("Member.findByName", Member.class)
+                .setParameter("name", "kim").getResultList();
     }
 
 }

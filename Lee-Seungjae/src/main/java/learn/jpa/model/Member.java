@@ -9,6 +9,10 @@ import java.io.Serializable;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NamedQuery(
+        name= "Member.findByName",
+        query = "select m from Member m where m.name = :name"
+)
 public class Member implements Serializable {
     private static final long serialVersionUID = 3990803224604257521L;
     
