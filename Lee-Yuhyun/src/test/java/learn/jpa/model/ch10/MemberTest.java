@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.repository.Modifying;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,6 +22,7 @@ class MemberTest {
     EntityManager em;
 
     @BeforeEach
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     void setUp() {
         Team team1 = Team.builder().name("team1").build();
         Team copyTeam1 = Team.builder().name("team1").build();
@@ -28,14 +30,14 @@ class MemberTest {
                                 .username("name1")
                                 .age(20)
                                 .team(team1).build();
+        em.persist(team1);
         em.persist(member1);
-//        em.persist(team1);
         Member member2 = Member.builder()
                 .username("name2")
                 .age(30)
                 .team(copyTeam1).build();
+        em.persist(copyTeam1);
         em.persist(member2);
-//        em.persist(copyTeam1);
     }
 
     @Test
@@ -131,13 +133,13 @@ class MemberTest {
 //                .setParameter("teamName", teamName)
 //                .getResultList();
         //페치조인
-//        String jpql = "select m from Member m join fetch m.team";
-//        List<Member> fetchJoinMembers =
-//                em.createQuery(jpql, Member.class)
-//                .getResultList();
-//        for (Member member : fetchJoinMembers) {
-//            System.out.println("username: " + member.getUsername() + ",teamname: " + member.getTeam().name());
-//        }
+        String jpql = "select m from Member m join fetch m.team";
+        List<Member> fetchJoinMembers =
+                em.createQuery(jpql, Member.class)
+                .getResultList();
+        for (Member member : fetchJoinMembers) {
+            System.out.println("username: " + member.getUsername() + ", teamname: " + member.getTeam().name());
+        }
 
         String collectionJpql = "select t from Team t join fetch t.members where t.name = 'team1'";
         List<Team> fetchJoinTeams =

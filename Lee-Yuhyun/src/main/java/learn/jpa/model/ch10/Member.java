@@ -20,6 +20,7 @@ public class Member {
     protected Member (String username, int age, Team team) {
         this.username = username;
         this.age = age;
+        //상호 참조 코드
         if (this.team != null) {
             this.team.getMembers().remove(this);
         }
@@ -39,7 +40,7 @@ public class Member {
 
     private int age;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne//(cascade = {CascadeType.ALL}) TODO: persist child 순서때문에 발생
     private Team team;
 
 }
