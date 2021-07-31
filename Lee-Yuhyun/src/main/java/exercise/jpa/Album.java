@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("A")
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

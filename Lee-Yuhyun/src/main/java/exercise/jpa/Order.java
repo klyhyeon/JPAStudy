@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Order")
+<<<<<<< HEAD
+=======
 @Builder
+>>>>>>> yuhyeon
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 public class Order extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
