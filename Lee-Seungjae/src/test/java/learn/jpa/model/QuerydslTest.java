@@ -1,11 +1,18 @@
 package learn.jpa.model;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import learn.jpa.dto.ItemDto;
+import learn.jpa.dto.SearchParam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -131,5 +138,46 @@ public class QuerydslTest {
     @DisplayName("join 테스트")
     void joinTest(){
         jpaQueryFactory.selectFrom(item).join(chair).on(chair.name.eq(item.name)).fetch();
+    }
+
+    @Test
+    @DisplayName("subQuery 테스트")
+    void subQueryTest() {
+        jpaQueryFactory.selectFrom(item)
+                .where(item.name.eq(String.valueOf(JPAExpressions.selectFrom(chair).where(chair.name.eq("item3")))))
+                .fetch();
+    }
+
+    @Test
+    @DisplayName("프로젝션 테스트")
+    void projectionTest() {
+        List<Tuple> list = jpaQueryFactory.select(item.name, item.price).from(item).orderBy(item.name.desc()).fetch();
+    }
+
+    @Test
+    @DisplayName("projection dto")
+    void dtoTest() {
+        List<ItemDto> result = jpaQueryFactory.select(Projections.bean(ItemDto.class, item.name.as("name"), item.price)).from(item).fetch();
+    }
+
+    @Test
+    @DisplayName("동적 쿼리")
+    void 동적쿼리_Test() {
+        SearchParam param = new SearchParam();
+        param.setName(null);
+        param.setPrice(200);
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (!ObjectUtils.isEmpty(param.getName())) {
+            System.out.println(param.getName());
+            booleanBuilder.and(item.name.eq(param.getName()));
+        }
+
+        if (!ObjectUtils.isEmpty(param.getPrice())) {
+            System.out.println(param.getPrice());
+            booleanBuilder.and(item.price.eq(param.getPrice()));
+        }
+
+        List<Item> result = jpaQueryFactory.selectFrom(item).where(booleanBuilder).fetch();
     }
 }
