@@ -218,7 +218,7 @@ where m.orders.size > 0
 - EXISTS : 서브쿼리에 결과가 존재하면 참
 ```sql
 select m from Member m
-where exists (select t from m.team t where t.name = 'teaem1')
+where exists (select t from m.team t where t.name = 'team1')
 ```
 - ALL, ANY/SOME : 모든 혹은 하나의 조건을 만족하면 참(비교 연산자와 함께 사용)
 ```sql
