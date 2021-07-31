@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Order")
+<<<<<<< HEAD
+=======
+@Builder
+>>>>>>> yuhyeon
 @Entity
 @NoArgsConstructor
 public class Order extends BaseEntity {
@@ -33,15 +37,15 @@ public class Order extends BaseEntity {
     public void setMember(Member member) {
         //기존 관계 제거
         if (this.member != null) {
-            this.member.getOrders().remove(this);
+//            this.member.getOrders().remove(this);
         }
         this.member = member;
-        member.getOrders().add(this);
+//        member.getOrders().add(this);
     }
 
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
-        delivery.setOrder(this);
+//        delivery.setOrder(this);
     }
 
     public void addOrderItem(OrderItem orderItem) {

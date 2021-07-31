@@ -1,14 +1,13 @@
 package learn.jpa.model;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity @Getter
+@Entity
+@Getter
+@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member implements Serializable {
     private static final long serialVersionUID = 3990803224604257521L;
@@ -18,14 +17,31 @@ public class Member implements Serializable {
     private String name;
     private int age;
 
-    @ManyToOne
-    private Team team;
-    
+    @Embedded
+    private Period period;
+
+    @Embedded
+    private Address homeAddress;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city", column = @Column(name = "COMPANY_CITY")),
+            @AttributeOverride(name = "street", column = @Column(name = "COMPANY_STREET")),
+            @AttributeOverride(name = "zipcode", column = @Column(name = "COMPANY_ZIPCODE")),
+    })
+    private Address companyAddress;
+
+    public Member(String name) {
+        this.name = name;
+    }
+
     @Builder
-    public Member(Long id, String name, int age, Team team) {
+    public Member(Long id, String name, int age, Period period, Address homeAddress, Address companyAddress) {
         this.id = id;
         this.name = name;
         this.age = age;
-        this.team = team;
+        this.period = period;
+        this.homeAddress = homeAddress;
+        this.companyAddress = companyAddress;
     }
 }
