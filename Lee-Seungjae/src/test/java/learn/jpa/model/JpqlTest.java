@@ -115,11 +115,12 @@ public class JpqlTest {
     @Test
     @DisplayName("여러값 조회")
     void specificColumnTest() {
-        List<Object[]> resultList = em.createQuery("SELECT m.homeAddress, m.companyAddress FROM Member m").getResultList();
+        List<Object[]> resultList = em.createQuery("SELECT m.name, m.homeAddress, m.companyAddress FROM Member m").getResultList();
 
         for(Object[] obj : resultList) {
-            Address homeAddress = (Address) obj[0];
-            Address companyAddress = (Address) obj[1];
+            String name = (String) obj[0];
+            Address homeAddress = (Address) obj[1];
+            Address companyAddress = (Address) obj[2];
         }
     }
 
