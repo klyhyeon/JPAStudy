@@ -28,14 +28,6 @@ class MemberTest {
         em = emf.createEntityManager();
         tx = em.getTransaction();
         tx.begin();
-//
-//        Member member = Member.builder()
-//                .name("홍길동")
-//                .age(27)
-//                .build();
-//
-//        em.persist(member);
-//        em.flush();
     }
     @AfterEach
     void closeAll(){ //JPA 반드시 종료 무조건 시켜주자
@@ -47,8 +39,6 @@ class MemberTest {
     @Test
     @DisplayName("2장 테스트")
     void memberTest(){
-        //given
-        tx.begin();
 
         //when
         Member member = Member.builder()
@@ -66,14 +56,12 @@ class MemberTest {
         // then
         assertThat(insertData.getName()).isEqualTo(member.getName());
         assertThat(insertData.getAge()).isEqualTo(member.getAge());
-        tx.commit();
     }
 
 
     @Test
     @DisplayName("프록시 테스트")
     void proxyTest(){
-        em.flush();
         Member resultMember = em.find(Member.class, 1L);
         em.flush();
 
