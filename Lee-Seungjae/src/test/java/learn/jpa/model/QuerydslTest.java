@@ -1,5 +1,6 @@
 package learn.jpa.model;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnit;
 import java.util.List;
 
+import static learn.jpa.model.QChair.chair;
+import static learn.jpa.model.QItem.item;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -53,6 +56,21 @@ public class QuerydslTest {
                 .build();
 
         em.persist(member);
+
+        Item item1 = Item.builder().price(1000).name("item1").build();
+        Item item2 = Item.builder().price(100).name("item2").build();
+        Item item3 = Item.builder().price(200).name("item3").build();
+        Item item4 = Item.builder().price(300).name("item4").build();
+        Item item5 = Item.builder().price(400).name("item5").build();
+        Chair chair = Chair.builder().name("item3").count(1000).build();
+
+        em.persist(item1);
+        em.persist(item2);
+        em.persist(item3);
+        em.persist(item4);
+        em.persist(item5);
+        em.persist(chair);
+
         em.flush();
     }
 
@@ -65,5 +83,53 @@ public class QuerydslTest {
 
         assertThat(members.get(0).getName()).isEqualTo("kim");
         assertThat(members.get(0).getAge()).isEqualTo(26);
+    }
+
+    @Test
+    @DisplayName("페이징 테스트")
+    void pagingTest() {
+        QItem item = QItem.item;
+
+        List<Item> result = jpaQueryFactory.selectFrom(item).where(item.price.lt(500))
+                                           .orderBy(item.price.desc(), item.name.desc())
+                                           .offset(1).limit(3).fetch();
+
+        result.forEach(r -> System.out.println(r.toString()));
+
+        assertThat(result.get(0).getName()).isEqualTo("item4");
+    }
+
+    @Test
+    @DisplayName("조회 결과 테스트")
+    void listResultsTest() {
+        QueryResults<Item> result = jpaQueryFactory.selectFrom(item).where(item.price.lt(500))
+                .orderBy(item.price.desc(), item.name.desc())
+                .offset(1).limit(3).fetchResults();
+
+        long total = result.getTotal(); //500보다 작은수 총 count
+        long limit = result.getLimit(); //limit 3
+        long offset = result.getOffset(); // offset 1
+        List<Item> results = result.getResults();
+
+        assertThat(total).isEqualTo(4L);
+        assertThat(limit).isEqualTo(3L);
+        assertThat(offset).isEqualTo(1L);
+
+        results.forEach(r -> System.out.println(r.toString()));
+    }
+
+    @Test
+    @DisplayName("groupBy 테스트")
+    void groupByTest() {
+        jpaQueryFactory.selectFrom(item)
+                       .groupBy(item.price)
+                       .having(item.price.lt(500))
+                       .fetch();
+    }
+
+    @Test
+    @DisplayName("join 테스트")
+    void joinTest(){
+        jpaQueryFactory.selectFrom(item).join(chair).on(chair.name.eq(item.name)).fetch();
     }
 }
