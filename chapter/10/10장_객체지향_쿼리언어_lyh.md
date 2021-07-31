@@ -250,8 +250,46 @@ where exists (select t from m.team t where t.name = 'team1')
   그리고 변하지 않는 정적 SQL이 생성되므로 DB의 조회 성능 최적화에도 도움이 됩니다.
   Named 쿼리는 @NamedQuery 어노테이션을 사용해 자바 코드에 작성하거나 XML 문서에 작성할 수 있습니다.
 
+## [QueryDSL](https://querydsl.com/static/querydsl/latest/reference/html/ch02s03.html#d0e1200)
 
+### QueryDSL 시작
 
+기본 Q 생성
+import static를 이용해 쿼리 타입의 기본 인스턴스를 사용하면
+코드를 더 간결하게 쓸 수 있습니다.
+`import static learn.jpa.model.ch10.QMember.member;`
+
+### 페이징과 정렬
+OFFSET
+- 반드시 `order by`와 함께 사용해야 합니다. 
+
+### 서브쿼리
+```java
+QCustomer customer = QCustomer.customer;
+QCustomer customer2 = new QCustomer("customer2");
+queryFactory.select(customer.all())
+    .from(customer)
+    .where(customer.status.eq(
+        SQLExpressions.select(customer2.status.max()).from(customer2)))
+    .fetch()
+```
+
+### [프로젝션](https://querydsl.com/static/querydsl/latest/reference/html/ch03s02.html)
+
+@QueryProjection
+- Projections.constructor를 대체할 수 있습니다.
+- Q 인스턴스 필드가 StringPath, NumberPath라서 사용못합니다. 원인은?
+
+### 수정,삭제,배치 쿼리
+
+JPQL 배치 쿼리와 같이 영속성 컨텍스트를 무시하고 데이터베이스를 직접 쿼리합니다.
+
+### 동적쿼리
+
+`BooleanBuilder`를 사용해 특정 조건에 따른 동적 쿼리를 편리하게 생성할 수 있습니다.
+
+### 메소드 위임
+`@QueryDelegate` 메소드 위임 기능을 사용하면 쿼리 타입에 검색 조건을 직접 정의할 수 있습니다.
 
 
 
