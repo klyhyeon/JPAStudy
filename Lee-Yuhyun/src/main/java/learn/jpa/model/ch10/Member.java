@@ -1,5 +1,7 @@
 package learn.jpa.model.ch10;
 
+import com.querydsl.core.annotations.QueryDelegate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -29,7 +31,6 @@ public class Member {
     }
 
     protected Member() {
-
     }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +44,10 @@ public class Member {
     @ManyToOne//(cascade = {CascadeType.ALL}) TODO: persist child 순서때문에 발생
     private Team team;
 
+
+    @QueryDelegate(Member.class)
+    public static BooleanExpression isOldEnough(QMember member,
+                                                int age) {
+        return member.age.gt(age);
+    }
 }
