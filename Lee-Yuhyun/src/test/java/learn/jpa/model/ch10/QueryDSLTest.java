@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -43,7 +42,6 @@ public class QueryDSLTest {
     private EntityManager entityManager;
 
     @BeforeEach
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
     void setUp() {
         Team team1 = Team.builder().name("team1").build();
         Team copyTeam1 = Team.builder().name("team1").build();
@@ -59,6 +57,9 @@ public class QueryDSLTest {
                 .team(copyTeam1).build();
         testEntityManager.persist(copyTeam1);
         testEntityManager.persist(member2);
+
+        testEntityManager.flush();
+        testEntityManager.clear();
     }
     
     @Test

@@ -291,6 +291,102 @@ JPQL 배치 쿼리와 같이 영속성 컨텍스트를 무시하고 데이터베
 ### 메소드 위임
 `@QueryDelegate` 메소드 위임 기능을 사용하면 쿼리 타입에 검색 조건을 직접 정의할 수 있습니다.
 
+## 네이티브 SQL
+
+DB에 종속적인 기능이 필요할 때 사용할 수 있습니다. 
+- 스토어드 프로시저
+- 특정 DB에만 사용하는 함수, 문법
+- 인라인 뷰(from절에서 쓰는 서브쿼리) UNION, INTERSECT
+
+### 네이티브 SQL 사용
+
+엔티티 조회
+`em.createNativeQuery`
+**띄어쓰기 중요..FROM 전에 스페이싱 없어서 컬럼 못찾는단 런타임 오류 뜸**
+
+### 결과 매핑 사용
+
+엔티티와 스칼라 값을 함께 조회하는 것처럼 매핑이 복잡해지면 `@SqlResultSetMapping`을 정의해야 합니다.
+엔티티와 단순 값을 나눠서 매핑할 수 있습니다. 
+- @EntityResult : 엔티티를 매핑
+- @ColumnResult : 컬럼명으로 컬럼을 찾아 단순값을 매핑
+
+```java
+Query nativeQuery = entityManager.createNativeQuery(sql, "memberWithOrderCount"); //param2: resultsetmapper
+//...  
+@SqlResultSetMapping(name = "memberWithOrderCount",
+      entities = {@EntityResult(entityClass = Member.class)},
+      columns = {@ColumnResult(name = "ORDER_COUNT")}
+)
+@Entity
+public Member {
+    //...
+}
+```
+
+### Named 네이티브 SQL
+
+정적쿼리는 만들어놓은(파싱된) 쿼리를 재사용 하기 때문에 성능에 이점이 있고 변하지 않는 
+정적 SQL이 생성되기 때문에 DB 성능 최적화에도 이점이 있습니다.
+
+네이티브 SQL은 이식성이 떨어지기 때문에 JPQL로 해결하고, Hibernate 같은 구현체를 이용한다음에도 
+안되면 마지막 방법으로 네이티브 SQL을 이용합시다.
+
+### 스토어드 프로시저
+
+SQL에 `proc_multiply` 프로시저를 등록해줍니다.
+- @NamedStoredProcedureQuery를 사용해줄 수 있습니다.
+
+### 객체지향 쿼리 심화
+
+벌크 연산
+- 수백개 이상의 엔티티를 한번에 수정/삭제할 때 필요한 기능입니다.
+- **주의점**은 영속성 컨텍스트를 무시하고 DB에 직접 쿼리한다는 점입니다.
+![image](https://user-images.githubusercontent.com/61368705/127762330-0c769592-6e4e-4486-bca0-27b709cb2a5c.png)
+**해결방법**
+- `em.refresh([entity])`를 벌크연산 직후 실행해 영속성 컨텍스트와 DB를 동기화 시켜줍니다.
+- 조회쿼리 전 벌크연산 먼저 실행 **안되는데?..**
+- 벌크연산 직후 영속성 컨텍스트 초기화 `em.clear()` 실행
+
+**JPQL과 영속성 컨텍스트**
+
+쿼리 후 영속성 컨텍스트와 아닌 것
+- 엔티티 외 임베디드, 값 타입은 조회해서 값을 변경해도 영속성 컨텍스트가 관리하지 않으므로
+변경 감지에 의한 값 수정이 일어나지 않습니다. 
+- 영속성 컨텍스트에 `member1`이 있는데 JQPL로 다시 `member1`을 조회하면 어떻게 될까?
+  - DB에서 조회한 엔티티를 버리고 영속성 컨텍스트의 엔티티를 반환합니다.
+    ![image](https://user-images.githubusercontent.com/61368705/127763031-edeb2cd9-70f8-4318-b788-08fa28b6f451.png)
+  - 왜 DB 엔티티 그대로 반환하지 않고 버리고 영속성 컨텍스트 엔티티를 반환하는 것일까?
+    - 영속성 컨텍스트는 동일성을 보장하기 때문에 새로운 엔티티를 등록하거나 등록된 엔티티를 대체하는 것은 맞지 않습니다.
+  수정 중인 엔티티가 사라질 위험성도 있기 때문입니다. **영속성 컨텍스트는 영속상태인 엔티티의 동일성을 보장합니다.**
+
+**find() vs JPQL**
+
+`em.find()` 메소드는 영속성 컨텍스트 캐시를 이용해 메모리에서 바로 찾을 수 있다는 장점이 있습니다. 
+
+**JPQL과 플러시 모드**
+
+`플러시 모드`란 영속성 컨텍스트의 변경내역(INSERT,UPDATE,DELETE)을 DB에 반영(동기화)하는 것입니다.
+`em.setFlushMode()`는 쿼리가 실행될때마다, 혹은 커밋이 호출될때마다 설정값을 지정해 자동으로 
+플러시가 실행되게 해주지만 성능 최적화를 위해 필요할때만 사용해야 합니다. 디폴트는 `AUTO`입니다.
+
+**쿼리와 플러시 모드**
+아직 플러시 되지 않은 엔티티가 영속성 컨텍스트 내에 있을 경우, 
+플러시를 COMMIT으로 설정하면 DB에 반영되지 않아 수정된 값을 반환하지 못합니다.
+```java
+entityManager.setFlushMode(FlushModeType.COMMIT);
+```
+- 플러시 `COMMIT`모드는 데이터 변경을 가져오지 못할수도 있다는 점에서
+데이터 무결성에 피해를 줄수도 있지만 빈번하게 플러시 모드가 작동하는 경우
+플러시 횟수를 줄여서 성능 최적화를 줄 수 있습니다. 
+ 
+
+
+
+
+
+
+
 
 
 
