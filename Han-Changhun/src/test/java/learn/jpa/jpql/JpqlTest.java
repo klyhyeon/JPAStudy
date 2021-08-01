@@ -5,6 +5,8 @@ import learn.jpa.config.JpaConfig;
 import learn.jpa.dto.MemberDto;
 import learn.jpa.dto.QMemberDto;
 import learn.jpa.model.Member;
+import learn.jpa.model.QTeam;
+import learn.jpa.model.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
