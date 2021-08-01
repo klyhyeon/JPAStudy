@@ -1,9 +1,9 @@
 package learn.jpa.model;
 
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Entity
 @ToString @Getter
@@ -26,7 +26,7 @@ public class Member extends BaseEntity {
     }
 
     public void toJoinTeam(Team team) {
-        if(team == null) {
+        if (team == null) {
             throw new IllegalArgumentException("Team is null!");
         }
         this.team = team;

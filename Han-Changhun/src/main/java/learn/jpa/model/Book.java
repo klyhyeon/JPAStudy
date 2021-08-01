@@ -1,8 +1,10 @@
 package learn.jpa.model;
 
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 @Entity
 @ToString @Getter
