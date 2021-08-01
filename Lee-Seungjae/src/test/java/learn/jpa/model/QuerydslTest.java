@@ -2,7 +2,6 @@ package learn.jpa.model;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,10 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.util.ObjectUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.*;
 import java.util.List;
 
 import static learn.jpa.model.QChair.chair;
@@ -151,13 +147,13 @@ public class QuerydslTest {
     @Test
     @DisplayName("프로젝션 테스트")
     void projectionTest() {
-        List<Tuple> list = jpaQueryFactory.select(item.name, item.price).from(item).orderBy(item.name.desc()).fetch();
+        jpaQueryFactory.select(item.name, item.price).from(item).orderBy(item.name.desc()).fetch();
     }
 
     @Test
     @DisplayName("projection dto")
     void dtoTest() {
-        List<ItemDto> result = jpaQueryFactory.select(Projections.bean(ItemDto.class, item.name.as("name"), item.price)).from(item).fetch();
+        jpaQueryFactory.select(Projections.bean(ItemDto.class, item.name.as("name"), item.price)).from(item).fetch();
     }
 
     @Test
@@ -178,6 +174,27 @@ public class QuerydslTest {
             booleanBuilder.and(item.price.eq(param.getPrice()));
         }
 
-        List<Item> result = jpaQueryFactory.selectFrom(item).where(booleanBuilder).fetch();
+        jpaQueryFactory.selectFrom(item).where(booleanBuilder).fetch();
+    }
+
+    @Test
+    @DisplayName("네이티브 SQL 엔티티 조회")
+    void nativeQueryTest() {
+        String sql = "select id, name, price from item where price > ?";
+        Query nativeQuery = em.createNativeQuery(sql, Item.class).setParameter(1, 100);
+
+        List<Item> items = nativeQuery.getResultList();
+    }
+
+    @Test
+    @DisplayName("쿼리와 플러시 모드")
+    void queryAndFlushTest() {
+        em.setFlushMode(FlushModeType.COMMIT);
+        Item item = em.find(Item.class, 1L);
+        item.setPrice(2000);
+
+        Object item2 = em.createQuery("select i from Item i where i.price = 2000")
+                .setFlushMode(FlushModeType.AUTO).getSingleResult();
+        System.out.println(item2.toString());
     }
 }
