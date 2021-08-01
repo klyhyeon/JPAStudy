@@ -1,8 +1,8 @@
 package exercise.jpa;
 
-import learn.jpa.model.ch09.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class Member extends BaseEntity {
 
     @Id
@@ -32,4 +33,8 @@ public class Member extends BaseEntity {
 //    private String street;
 //
 //    private String zipcode;
+
+    public List<Order> getOrders() {
+        return orders;
+    }
 }

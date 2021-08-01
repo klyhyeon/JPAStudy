@@ -1,6 +1,5 @@
 package exercise.jpa;
 
-import learn.jpa.model.ch09.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -30,4 +29,15 @@ public class Delivery {
 
     @Enumerated(EnumType.STRING)
     private Deliverystatus status;
+
+<<<<<<< HEAD
+=======
+    public Address getAddress() {
+        return address;
+    }
+
+>>>>>>> yuhyeon
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 }
