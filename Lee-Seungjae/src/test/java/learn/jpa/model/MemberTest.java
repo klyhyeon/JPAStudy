@@ -1,17 +1,26 @@
 package learn.jpa.model;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnit;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import learn.jpa.repository.MemberRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @ActiveProfiles("real")
@@ -24,11 +33,32 @@ class MemberTest {
     EntityManager em;
     EntityTransaction tx;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    Address address;
+    Address comAddress;
+    Period period;
+
     @BeforeEach
     void connectJPA() {
         em = emf.createEntityManager();
         tx = em.getTransaction();
         tx.begin();
+
+        address = Address.builder()
+            .city("city")
+            .street("street")
+            .zipcode("zipcode")
+            .build();
+
+        comAddress = Address.builder()
+            .city("cocity")
+            .street("costreet")
+            .zipcode("cozipcode")
+            .build();
+
+        period = Period.of("20210714", "20210714");
     }
 
     @AfterEach
@@ -100,5 +130,43 @@ class MemberTest {
         em.flush();
 
         System.out.println(member.toString());
+    }
+
+    @Test
+    void 두건_조회_테스트() {
+        Address address = Address.builder()
+            .city("city")
+            .street("street")
+            .zipcode("zipcode")
+            .build();
+
+        Address comAddress = Address.builder()
+            .city("cocity")
+            .street("costreet")
+            .zipcode("cozipcode")
+            .build();
+
+        Period period = Period.of("20210714", "20210714");
+
+        Member member = Member.builder()
+            .name("name")
+            .age(26)
+            .period(period)
+            .homeAddress(address)
+            .companyAddress(comAddress)
+            .build();
+
+        Member member2 = Member.builder()
+            .name("name")
+            .age(26)
+            .period(period)
+            .homeAddress(address)
+            .companyAddress(comAddress)
+            .build();
+
+        memberRepository.save(member);
+        memberRepository.save(member2);
+
+        memberRepository.findByName("name");
     }
 }
