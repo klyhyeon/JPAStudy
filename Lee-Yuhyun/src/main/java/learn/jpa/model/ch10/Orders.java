@@ -1,6 +1,7 @@
 package learn.jpa.model.ch10;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
 public class Orders {
 
     @Id @GeneratedValue
