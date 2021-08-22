@@ -11,3 +11,9 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: create
     generate-ddl: true
+    open-in-view: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hivernate.type: trace

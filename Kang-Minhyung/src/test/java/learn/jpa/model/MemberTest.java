@@ -4,6 +4,7 @@ import learn.jpa.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -87,5 +88,17 @@ class MemberTest {
         System.out.println(save2.getId());
 
         assertThat(save.getId()).isEqualTo(3);
+    }
+
+    @Test
+    public void test01() {
+        //given
+        Pageable pageable = Pageable.ofSize(1).withPage(2);
+        repository.findByAge(10, pageable);
+
+        //when
+
+
+        //then
     }
 }
