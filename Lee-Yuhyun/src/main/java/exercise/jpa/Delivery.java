@@ -30,13 +30,10 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private Deliverystatus status;
 
-<<<<<<< HEAD
-=======
     public Address getAddress() {
         return address;
     }
 
->>>>>>> yuhyeon
     public void setOrder(Order order) {
         this.order = order;
     }

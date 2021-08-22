@@ -9,6 +9,26 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
+//@SqlResultSetMapping(name = "memberWithOrderCount",
+//    entities = {@EntityResult(entityClass = Member.class)},
+//    columns = {@ColumnResult(name = "ORDER_COUNT")}
+//)
+@NamedNativeQuery(
+        name = "Member.memberSQL",
+        query = "SELECT ID, AGE, NAME, TEAM_ID " +
+                "FROM MEMBER WHERE AGE > ?",
+        resultClass = Member.class
+)
+@NamedStoredProcedureQuery(
+        name = "multiply",
+        procedureName = "proc_multiply",
+        parameters = {
+                @StoredProcedureParameter(name = "inParam", mode =
+                ParameterMode.IN, type = Integer.class),
+                @StoredProcedureParameter(name = "outParam", mode =
+                        ParameterMode.OUT, type = Integer.class)
+        }
+)
 @ToString(exclude = "team")
 @Getter
 //@NamedQuery(name = "Member.findByUsername", query="select m from Member m where m.username = :username")
@@ -49,5 +69,9 @@ public class Member {
     public static BooleanExpression isOldEnough(QMember member,
                                                 int age) {
         return member.age.gt(age);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
