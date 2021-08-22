@@ -7,11 +7,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "Order")
-<<<<<<< HEAD
-=======
-@Builder
->>>>>>> yuhyeon
 @Entity
 @NoArgsConstructor
 public class Order extends BaseEntity {

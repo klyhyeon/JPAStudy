@@ -53,9 +53,6 @@ public class AdvancedJPQLTest {
                 .executeUpdate();
         System.out.println(resultCount);
 
-        entityManager.flush();
-        entityManager.clear();
-
         Member member1 =
                 entityManager.createQuery("select m from Member m where m.username = :name",
                         Member.class)

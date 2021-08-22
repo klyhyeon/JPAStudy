@@ -141,7 +141,7 @@ public class QueryDSLTest {
                     .select(
                             Projections.constructor(UserDTO.class,
                                     member.username, member.age)
-
+                            //TODO: QUserDTO, DTO가 QueryDSL 의존적이란 특성
                     )
                     .from(member)
                     .fetch();
@@ -156,7 +156,6 @@ public class QueryDSLTest {
                 .set(member.age, member.age.add(1))
                 .execute();
         System.out.println(count);
-        //TODO: 왜 update된 member age가 그대로인지
         List<Member> members =
                 (List<Member>) jpaQueryFactory
                     .from(member)
