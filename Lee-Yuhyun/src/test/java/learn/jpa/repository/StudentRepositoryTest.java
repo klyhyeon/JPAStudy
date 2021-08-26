@@ -21,10 +21,10 @@ class StudentRepositoryTest {
     @DisplayName("Pageable 테스트")
     void pageableTest() {
         //페이징 조건과 정렬 조건 설정
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name").ascending());
+        PageRequest pageRequest = PageRequest.of(1, 10, Sort.by("id").ascending());
         //given
         String name = "yuhyeon";
-        Page<Student> result = studentRepository.findByNameStartingWith(name, pageRequest);
+        Page<Student> result = studentRepository.findByName(name, pageRequest);
         List<Student> students = result.getContent();
         int totalPages = result.getTotalPages();
         boolean hasNextPage = result.hasNext();
