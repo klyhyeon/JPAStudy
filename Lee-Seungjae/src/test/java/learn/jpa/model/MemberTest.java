@@ -2,24 +2,16 @@ package learn.jpa.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Arrays;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnit;
 import learn.jpa.repository.MemberRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
@@ -61,12 +53,12 @@ class MemberTest {
         period = Period.of("20210714", "20210714");
     }
 
-    @AfterEach
-    void closeAll() { //JPA 반드시 종료 무조건 시켜주자
-        tx.commit();
-        em.close();
-        emf.close();
-    }
+//    @AfterEach
+//    void closeAll() { //JPA 반드시 종료 무조건 시켜주자
+//        tx.commit();
+//        em.close();
+//        emf.close();
+//    }
 
     @Test
     @DisplayName("2장 테스트")
