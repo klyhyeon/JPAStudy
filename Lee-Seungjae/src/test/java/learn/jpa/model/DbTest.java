@@ -22,21 +22,12 @@ public class DbTest {
     @Test
     @Sql("classpath:member.sql")
     void dbTest() throws Exception {
-        Page<Member> members = memberRepository.findMembersByName("테스트", PageRequest.of(0, 3, Sort.by(Order.desc("age"))));
-//        Page<Member> members = memberRepository.findByName("테스트", PageRequest.of(0, 3, Sort.by(Order.desc("age"))));
-//        Page<Member> members = memberRepository.findByNameOrderByAgeDesc("테스트", PageRequest.of(1, 3, Sort.by(Order.desc("age"))));
-
+        Page<Member> members = memberRepository.findByName("테스트", PageRequest.of(0, 3, Sort.by(Order.desc("age"))));
 
         Pageable pageable = members.getPageable();
 
         System.out.println("pageable = " + pageable);
         System.out.println("pageable.getSort() = " + pageable.getSort());
-//
         members.getContent().forEach(System.out::println);
-
-//        List<Member> all = memberRepository.findAll(Sort.by(Order.desc("age")));
-//        for (Member member : all) {
-//            System.out.println("member = " + member);
-//        }
     }
 }
