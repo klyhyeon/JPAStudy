@@ -11,6 +11,8 @@ import java.util.List;
 @Entity
 @Getter
 @ToString
+@NamedEntityGraph(name = "Team.members",
+        attributeNodes = @NamedAttributeNode("members"))
 public class Team {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,9 +5,6 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
-@NamedEntityGraph(name = "Orders.withMember", attributeNodes = {
-        @NamedAttributeNode("member")
-})
 @Entity
 @Getter
 public class Orders {
