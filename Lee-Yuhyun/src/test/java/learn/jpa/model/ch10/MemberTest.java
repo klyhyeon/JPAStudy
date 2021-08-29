@@ -12,6 +12,8 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
 class MemberTest {
 
@@ -160,6 +162,16 @@ class MemberTest {
                 .setParameter("username", "name1")
                 .getResultList();
         System.out.println(resultList.get(0).getUsername());
+    }
+
+    @Test
+    @DisplayName("영속성 컨텍스트와 프록시 테스트")
+    void persistContextProxyTest() throws Exception {
+        Member refMember = em.getReference(Member.class, 2L);
+        Member findMember = em.find(Member.class, 2L);
+        System.out.println("proxy: " + refMember.getClass());
+        System.out.println("entity: " + findMember.getClass());
+        assertThat(refMember instanceof Member).isTrue();
     }
 
 
