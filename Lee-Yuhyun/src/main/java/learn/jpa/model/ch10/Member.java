@@ -29,7 +29,7 @@ import javax.persistence.*;
                         ParameterMode.OUT, type = Integer.class)
         }
 )
-@ToString(exclude = "team")
+//@ToString(exclude = "team")
 @Getter
 //@NamedQuery(name = "Member.findByUsername", query="select m from Member m where m.username = :username")
 @NamedQueries({
