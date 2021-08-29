@@ -1,0 +1,1 @@
+[12장 - Spring Data JPA](https://lsj8367.github.io/jpa/JPA-spring-data-jpa/)
